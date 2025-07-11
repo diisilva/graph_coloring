@@ -1,10 +1,11 @@
-# Projeto de Coloração de Grafos
+# Projeto de Coloração de Grafos e Algoritmos de Grafos
 
-Este repositório contém os algoritmos de grafos implementados em Python, incluindo busca (BFS, DFS), cálculo de menor caminho (Dijkstra) e, principalmente, diferentes heurísticas de coloração de grafos não ponderados e não direcionados.
+Este repositório contém os algoritmos de grafos implementados em Python, incluindo busca (BFS, DFS), cálculo de menor caminho (Dijkstra), diferentes heurísticas de coloração de grafos não ponderados e não direcionados, e algoritmos para Árvore Geradora Mínima (MST).
 
 ## Conteúdo
 
 - `diegoS_Coloracao_v4.py`: implementação principal que carrega um grafo de um arquivo `.txt`, executa algoritmos clássicos (BFS, DFS, Dijkstra) e diferentes métodos de coloração (`brute`, `naive`, `welsh`, `dsatur`).
+- `agm_v1.py`: implementação de algoritmos de Árvore Geradora Mínima (MST) - Prim e Kruskal.
 - Arquivos de grafo de exemplo (`k5.txt`, `kquase5.txt`, `k33.txt`, `r1000-234-234.txt`, `r250-66-65.txt`, `C4000-260-X.txt`), que seguem o formato:
   ```
   n m D P
@@ -175,57 +176,58 @@ python diegoS_Coloracao_v4.py C4000-260-X.txt --coloring-method welsh --start 2
 4. **`dsatur` (DSATUR)**  
    Inicia colorindo o vértice `--start` com cor 0. A cada passo, escolhe o vértice não colorido que possui menor disponibilidade de cores (maior “saturação” = número de cores distintas nos vizinhos). Em caso de empate, escolhe o vértice de maior grau.
 
-## Saída esperada
+## Algoritmos de Árvore Geradora Mínima (MST)
 
-Para cada heurística, a saída padrão mostrará algo como:
+O arquivo `agm_v1.py` contém implementações dos algoritmos de Árvore Geradora Mínima (MST):
+- Algoritmo de Prim
+- Algoritmo de Kruskal
 
-```
---- Coloração ---
-Naive: tempo=0.123 ms cores=χ
-#######################################################################
+### Pré-requisitos
 
-Ordem de coloração: v2->v0->v1->…
-#######################################################################
+- Python 3.8 ou superior
+- Nenhuma biblioteca externa adicional é necessária
 
-################# ATRIBUIÇÕES  #########################################
+### Como usar
 
-########################################################################
-
-Atribuições na ordem de coloração:
-v2:0, v0:1, v1:0, …
+Na raiz do repositório, execute:
+```bash
+python agm_v1.py <caminho_para_arquivo_de_grafo> [opções]
 ```
 
-Se `--plot-coloring` for ativado, um gráfico interativo aparecerá com:
+### Parâmetros obrigatórios
 
-- Vértices coloridos (usando colormap categórico)
-- Bordas destacando vértices de maior grau
-- Setas indicando a ordem de coloração (se aplicável)
-- Legenda de cores (Cor 1, Cor 2, …)
+- `filepath`  
+  Caminho para o arquivo `.txt` que contém a definição do grafo.
 
-## Estrutura resumida do script
+### Opções (flags)
 
-- **Leitura do grafo (`load_from_file`)**:  
-  Lê número de vértices, arestas, se é direcionado e/ou ponderado. Carrega lista e matriz de adjacência.  
-- **Algoritmos clássicos** (comentados por padrão se apenas coloração):  
-  - `bfs(graph, start, rep)`  
-  - `dfs(graph, start, rep)`  
-  - `dijkstra(graph, start, rep)`  
-- **Funções de coloração**:  
-  - `brute_force_coloring(graph, start)`  
-  - `heuristic_naive(graph, start)`  
-  - `welsh_powell_coloring(graph, start)`  
-  - `dsatur_coloring(graph, start)`  
-- **Funções de plotagem**  
-  - `plot_all_results(...)`: plota BFS, DFS e Dijkstra lado a lado  
-  - `plot_coloring(...)`: plota grafo colorido com legendas e setas
+- `--algorithm {prim,kruskal,all}`  
+  Escolhe o algoritmo de MST a ser executado:  
+  - `prim`: executa apenas o algoritmo de Prim  
+  - `kruskal`: executa apenas o algoritmo de Kruskal  
+  - `all`: executa ambos os algoritmos (padrão)
 
-## Observações finais
+- `--start N`  
+  Vértice de origem para o algoritmo de Prim (inteiro entre `0` e `n–1`).  
+  Padrão: `0`.
 
-- Para instâncias de grafos grandes, a heurística `brute` pode demorar muito ou não terminar em tempo viável.  
-- Ao usar `--plot` ou `--plot-coloring`, certifique-se de que o ambiente permita a abertura de janelas (`matplotlib` interativo).  
-- O parâmetro `--start` influencia tanto buscas (origem) quanto colorações (vértice inicial). Para busca clássica, `--start` indica o vértice de onde a busca começa; para coloração, indica qual vértice deve ser colorido primeiro.
+### Saída esperada
+
+Para cada algoritmo executado, a saída padrão mostrará:
+- Tempo de execução (formatado automaticamente em µs, ms ou s)
+- Soma das arestas da MST
+- Número de arestas na MST e média de peso
+- Lista completa das arestas da MST, com formato: `origem -- destino [w=peso]`
+
+### Exemplos de execução
+
+```bash
+python agm_v1.py grafos_testados\r250-66-65.txt --algorithm kruskal
+python agm_v1.py grafos_testados\r250-66-65.txt --algorithm prim --start 4
+python agm_v1.py grafos_testados\slides_modificado.txt --algorithm all
+```
 
 ---
 
 **Autor:** Diego Silva  
-**Data:** Junho de 2025  
+**Data:** Junho de 2025
